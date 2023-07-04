@@ -29,6 +29,7 @@ using namespace std;
 
 void LoadImages(const string &strImagePath, const string &strPathTimes,
                 vector<string> &vstrImages, vector<double> &vTimeStamps);
+bool CheckKeyboardInput();
 
 int main(int argc, char **argv)
 {  
@@ -80,7 +81,8 @@ int main(int argc, char **argv)
     int fps = 20;
     float dT = 1.f/fps;
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::MONOCULAR, false);
+    //ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::MONOCULAR, false);
+    ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::MONOCULAR, true);    
     float imageScale = SLAM.GetImageScale();
 
     double t_resize = 0.f;
@@ -183,6 +185,11 @@ int main(int argc, char **argv)
         }
 
     }
+    std::cout<<"Has finished slam, waitting viem, may break by keyboard: q or quit !!!"<<std::endl;
+    if (CheckKeyboardInput())
+    {
+        std::cout<<"break by keyboard!!!"<<std::endl;
+    }    
     // Stop all threads
     SLAM.Shutdown();
 
@@ -222,7 +229,26 @@ void LoadImages(const string &strImagePath, const string &strPathTimes,
             double t;
             ss >> t;
             vTimeStamps.push_back(t*1e-9);
-
+            if(vTimeStamps.size() % 100 == 0)
+                std::cout<<"Has loaded:"<<(strImagePath + "/" + ss.str() + ".png")<<std::endl;
         }
     }
+}
+
+bool CheckKeyboardInput()
+{
+    if (std::cin.peek() != EOF)
+    {
+        // 读取键盘输入
+        std::string input;
+        std::getline(std::cin, input);
+
+        // 检查输入的指令并执行相应的操作
+        if (input == "q" || input == "quit")
+        {
+            return true; // 返回true表示退出循环
+        }
+    }
+
+    return false; // 返回false表示继续循环
 }

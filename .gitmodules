@@ -1,0 +1,3 @@
+[submodule "Examples/ROS/src/orb_slam3_ros_wrapper"]
+	path = Examples/ROS/src/orb_slam3_ros_wrapper
+	url = git@github.com:slamcn/orb_slam3_ros_wrapper.git
